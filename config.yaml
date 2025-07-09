@@ -1,4 +1,4 @@
-name: "TinySpeechQuantized"
+name: "BitGateNet"
 device: "cpu"
 
 #dataset:  
@@ -6,26 +6,27 @@ device: "cpu"
 #  val_path: "dataset/val"
 #  test_path: "dataset/test"
 
+save_pth: "checkpoints" 
+
 
 dataset:  
-  train_path: "mfcc_npy/train"
-  val_path: "mfcc_npy/val"
-  test_path: "mfcc_npy/test"
+  train_path: "features/train"
+  val_path: "features/val"
+  test_path: "features/test"
 
-debug: false  
-
-save_pth: "models"
-header_path: "tiny_c"
-epochs: 100
-batch_size: 16
-
-lr: 0.01
-momentum: 0.95
-seed: 42
 
 labels: ["yes", "no", "on", "off", "stop", "go", "_unknown_", "_silence_"]
 
 quant_type: "8bit"
-wscale: "PerTensor"
 quant_scale: 1.0
-test: 0
+
+debug: false  
+
+header_path: "inference_c"
+epochs: 100
+batch_size: 16
+patience: 5
+lr: 0.01
+weight_decay: 0.0001
+momentum: 0.95
+seed: 42

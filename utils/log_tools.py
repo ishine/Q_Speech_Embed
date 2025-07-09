@@ -4,7 +4,7 @@ import numpy as np
 import torch
 
 # Global toggle to enable/disable binary tensor logging
-LOG_TENSOR_ENABLED = True  # Set to False to disable logging (e.g., from config)
+LOG_TENSOR_ENABLED = False # Set to False to disable logging (e.g., from config)
 
 class LoggerUnit:
     def __init__(self, name, level=logging.INFO):

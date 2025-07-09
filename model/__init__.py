@@ -1,4 +1,4 @@
-from .bitgatenet import BitGateNet
+from .BitGateNet import BitGateNet
 from .conv2d_q import Conv2d_Q
 from .linear_q import Linear_Q
 from .dualgatebn_q import DualGateBN_Q

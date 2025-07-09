@@ -5,7 +5,7 @@ from utils import SymQuant8bit, LoggerUnit
 
 class DualGateBN_Q(nn.Module):
     def __init__(self, in_channels, mid_channels_0, out_channels_0, mid_channels_1, out_channels_1,
-                 quantizer=None, test=0):
+                 quantizer=None):
         super(DualGateBN_Q, self).__init__()
 
         self.quantizer = quantizer or SymQuant8bit(quantscale=0.25)
@@ -18,7 +18,6 @@ class DualGateBN_Q(nn.Module):
                                     quantizer=self.quantizer)
         self.layer4 = BatchNorm2D_Q(in_channels, quantizer=self.quantizer)
 
-        self.test = test
 
     def forward(self, x):
         out = self.layer1(x)

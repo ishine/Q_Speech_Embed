@@ -36,17 +36,3 @@ class Conv2d_Q(nn.Conv2d):
                         padding=self.padding,
                         dilation=self.dilation,
                         groups=self.groups)
-
-if __name__ == "__main__":
-    x = torch.randn(1, 1, 12, 98)
-
-    for qscale in [1.0, 0.25]:
-        print(f"\nTesting with quantscale={qscale}")
-        quantizer = SymQuant8bit(quantscale=qscale)
-        conv = Conv2d_Q(1, 4, kernel_size=3, stride=1, padding=1, quantizer=quantizer, bias=True)
-
-        out = conv(x)
-        print("Output shape:", out.shape)
-
-        w_q, _ = quantizer.quantize(conv.weight)
-        print("Quantized weight range:", w_q.min().item(), "to", w_q.max().item())

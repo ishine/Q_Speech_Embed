@@ -22,16 +22,3 @@ class Parameter_Q(nn.Module):
 
         return x_fq * param_fq
 
-
-if __name__ == "__main__":
-    logger = LoggerUnit("Parameter_Q_Test").get_logger()
-    torch.manual_seed(0)
-
-    x = torch.tensor([2.85])
-    qp = Parameter_Q(torch.tensor([0.937]))
-
-    y = qp(x)
-
-    logger.info(f"Input: {x.item():.4f}.")
-    logger.info(f"Param (learnable): {qp.param.item():.4f}.")
-    logger.info(f"Output (quantized product): {y.item():.4f}.")
