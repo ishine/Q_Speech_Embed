@@ -1,0 +1,31 @@
+name: "TinySpeechQuantized"
+device: "cpu"
+
+#dataset:  
+#  train_path: "dataset/train"
+#  val_path: "dataset/val"
+#  test_path: "dataset/test"
+
+
+dataset:  
+  train_path: "mfcc_npy/train"
+  val_path: "mfcc_npy/val"
+  test_path: "mfcc_npy/test"
+
+debug: false  
+
+save_pth: "models"
+header_path: "tiny_c"
+epochs: 100
+batch_size: 16
+
+lr: 0.01
+momentum: 0.95
+seed: 42
+
+labels: ["yes", "no", "on", "off", "stop", "go", "_unknown_", "_silence_"]
+
+quant_type: "8bit"
+wscale: "PerTensor"
+quant_scale: 1.0
+test: 0

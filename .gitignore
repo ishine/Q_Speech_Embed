@@ -205,3 +205,50 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# QSpeechEmbed Project Specific.
+
+# Quantized model exports.
+*.bin
+*.pth
+*.onnx
+*.tflite
+*.pt
+
+# Feature files
+*.npy
+features/
+
+# Audio files (raw or intermediate).
+*.wav
+*.mp3
+*.flac
+*.ogg
+*.aiff
+*.m4a
+*.aac
+*.au
+*.raw
+
+# Model checkpoints and logs.
+checkpoints/
+logs/
+*.log
+me/
+# Exported C headers + arrays.
+inference_c/*.c
+inference_c/*.h
+inference_c/*.o
+inference_c/*.out
+inference_c/*.exe
+
+# Virtual environment (just to be safe).
+env1/
+.venv/
+ENV/
+
+# VSCode project settings.
+.vscode/
+
+# PyTorch anomaly files.
+torch_model/
