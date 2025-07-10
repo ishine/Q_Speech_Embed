@@ -4,10 +4,10 @@ import numpy as np
 import torch
 
 # Global toggle to enable/disable binary tensor logging
-LOG_TENSOR_ENABLED = False # Set to False to disable logging (e.g., from config)
+LOG_TENSOR_ENABLED = False  # Set to True if binary logs are needed
 
 class LoggerUnit:
-    def __init__(self, name, level=logging.INFO):
+    def __init__(self, name, level=logging.DEBUG):  # Set default level to DEBUG
         self.logger = logging.getLogger(name)
         self.level = level
         self.setup_logger()
@@ -17,7 +17,7 @@ class LoggerUnit:
 
         if not any(isinstance(handler, logging.StreamHandler) for handler in self.logger.handlers):
             console_handler = logging.StreamHandler()
-            console_handler.setLevel(self.level)
+            console_handler.setLevel(self.level)  # Also set handler to DEBUG
 
             formatter = logging.Formatter(
                 "%(asctime)s - %(name)s - %(levelname)s - %(message)s", datefmt="%Y-%m-%d %H:%M:%S"
@@ -57,17 +57,3 @@ def log_tensor(name: str, tensor: torch.Tensor, outdir: str = "logs", verbose: b
 
     if verbose:
         print(f"[log_tensor] Saved: {filepath} | Shape: {tensor.shape}")
-
-
-if __name__ == "__main__":
-    # Testing
-    LOG_TENSOR_ENABLED = True  # You can toggle this off to skip tensor logging
-
-    # Test LoggerUnit
-    logger = LoggerUnit("TestLogger").get_logger()
-    logger.info("This is an info message.")
-    logger.warning("This is a warning message.")
-
-    # Test log_tensor
-    test_tensor = torch.randn(1, 4, 6, 6)
-    log_tensor("test_tensor", test_tensor, outdir="logs", verbose=True)

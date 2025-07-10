@@ -1,7 +1,7 @@
 import torch.nn as nn
 from .gateresidual_q import GateResidual_Q
 from .batchnorm2d_q import BatchNorm2D_Q
-from utils import SymQuant8bit, LoggerUnit
+from utils import SymQuant8bit
 
 class DualGateBN_Q(nn.Module):
     def __init__(self, in_channels, mid_channels_0, out_channels_0, mid_channels_1, out_channels_1,

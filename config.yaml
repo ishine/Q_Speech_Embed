@@ -1,6 +1,7 @@
 name: "BitGateNet"
 device: "cpu"
 
+# Original raw dataset paths (kept for reference)
 #dataset:  
 #  train_path: "dataset/train"
 #  val_path: "dataset/val"
@@ -8,21 +9,19 @@ device: "cpu"
 
 save_pth: "checkpoints" 
 
-
+# Current feature-based dataset
 dataset:  
   train_path: "features/train"
   val_path: "features/val"
   test_path: "features/test"
 
-
 labels: ["yes", "no", "on", "off", "stop", "go", "_unknown_", "_silence_"]
 
 quant_type: "8bit"
-quant_scale: 1.0
-
-debug: false  
-
+quant_scale: 1.0  
+q_en: false
 header_path: "inference_c"
+
 epochs: 100
 batch_size: 16
 patience: 5

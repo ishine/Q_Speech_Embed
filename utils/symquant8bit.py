@@ -3,7 +3,7 @@ import torch.nn as nn
 from .log_tools import LoggerUnit
 
 class SymQuant8bit:
-    def __init__(self, group_dim=1, group_size=1, eps=1e-5, quantscale=1.0):
+    def __init__(self, group_dim=1, group_size=1, eps=1e-5, quantscale=1.0, enabled=True):
         """
         Symmetric 8-bit quantizer with group-wise support.
 
@@ -17,9 +17,12 @@ class SymQuant8bit:
         self.group_size = group_size
         self.eps = eps
         self.quantscale = quantscale
+        self.enabled = enabled
         self.logger = LoggerUnit("SymQuant8bit").get_logger()
 
     def quantize(self, x, verbose=False):
+        if not self.enabled:
+            return x, 1
         x_abs = x.abs()
 
         # Scalar (0D tensor)
@@ -69,44 +72,17 @@ class SymQuant8bit:
         return q_x / scale
 
     def apply_fake_quant(self, q_x, scale, x):
-        return x + (q_x / scale - x).detach()
+        if not self.enabled:
+            return x
+        return (x + (q_x / scale - x).detach())
+    
+    # def apply_fake_quant(self, q_x, scale, x):
+    #     if not self.enabled:
+    #         return x
+    #     out = x + (q_x / scale - x).detach()
+    #     self.logger.debug(f"[SymQuant8bit] Fake quant out: {out.shape}, is_leaf={out.is_leaf}")
+    #     return out
 
     def __str__(self):
         return f"SymQuant8bit(group_dim={self.group_dim}, group_size={self.group_size}, scale={self.quantscale})"
 
-
-if __name__ == "__main__":
-    from log_tools import LoggerUnit
-    logger = LoggerUnit("SymQuantTest").get_logger()
-    torch.manual_seed(0)
-
-    quant = SymQuant8bit(quantscale=1.0)
-
-    def test_tensor(name, x):
-        q, scale = quant.quantize(x, verbose=True)
-        x_hat = quant.dequantize(q, scale)
-        err = (x - x_hat).abs().max().item()
-
-        logger.info(f"{name} | shape: {tuple(x.shape)}")
-        logger.info(f"- scale: {scale}")
-        logger.info(f"- quantized range: {q.min().item()} to {q.max().item()}")
-        logger.info(f"- dequant error (max abs diff): {err:.6f}")
-        print("")
-
-    # Scalar..
-    test_tensor("Scalar", torch.tensor(0.75))
-
-    # 1D Vector
-    test_tensor("1D vector", torch.tensor([0.1, 0.3, 0.9]))
-
-    # ND weights (ex: conv).
-    test_tensor("Conv weights", torch.randn(8, 3, 3, 3))
-
-    # ND uneven groups.
-    test_tensor("Uneven groups", torch.randn(7, 5, 3, 3))
-
-    # All zeros.
-    test_tensor("All zeros", torch.zeros(4, 4))
-
-    # Outlier-heavy tensor.
-    test_tensor("Outliers", torch.tensor([0.1, 0.2, 900.0, 0.3]))

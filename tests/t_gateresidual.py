@@ -3,7 +3,7 @@ from model import GateResidual_Q
 from utils import LoggerUnit, SymQuant8bit
 
 
-logger = LoggerUnit("QGateResidual_Test").get_logger()
+logger = LoggerUnit("GateResidual_Test").get_logger()
 
 if __name__ == "__main__":
     
