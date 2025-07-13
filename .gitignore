@@ -206,9 +206,9 @@ marimo/_static/
 marimo/_lsp/
 __marimo__/
 
-# QSpeechEmbed Project Specific.
+# QSpeechEmbed Project Specific
 
-# Quantized model exports.
+# Quantized model exports
 *.bin
 *.pth
 *.onnx
@@ -217,9 +217,21 @@ __marimo__/
 
 # Feature files
 *.npy
-features/
+/features/
 
-# Audio files (raw or intermediate).
+# Dataset audio and processed files (but allow code in dataset/)
+dataset/*.npy
+dataset/*.wav
+dataset/*.mp3
+dataset/*.flac
+dataset/*.ogg
+dataset/*.aiff
+dataset/*.m4a
+dataset/*.aac
+dataset/*.au
+dataset/*.raw
+
+# Audio files (global match)
 *.wav
 *.mp3
 *.flac
@@ -230,25 +242,29 @@ features/
 *.au
 *.raw
 
-# Model checkpoints and logs.
-checkpoints/
-logs/
+# Model checkpoints and logs
+/checkpoints/
+/logs/
 *.log
-me/
-# Exported C headers + arrays.
-inference_c/*.c
-inference_c/*.h
-inference_c/*.o
-inference_c/*.out
-inference_c/*.exe
 
-# Virtual environment (just to be safe).
-env1/
-.venv/
-ENV/
+# Ignore personal notes and loose text files
+/me/
+*.txt
 
-# VSCode project settings.
+# Exported C artifacts
+infer_c/*.o
+infer_c/*.out
+infer_c/*.exe
+infer_c/weights_meta.cy
+infer_c/weights.c
+
+# Virtual environments
+/env1/
+/.venv/
+/ENV/
+
+# VSCode settings
 .vscode/
 
-# PyTorch anomaly files.
-torch_model/
+# Torch diagnostic dumps
+/torch_model/

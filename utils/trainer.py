@@ -57,14 +57,14 @@ def train_epoch(model, train_loader, criterion, optimizer, device, logger, epoch
         #if batch_idx < 5:
         #    logger.info(f"[Timing] Batch {batch_idx+1} took {batch_end - batch_start:.3f} seconds")
 
-    # Prevent division by zero
+    # Prevent division by zero.
     if total_samples > 0:
         avg_loss = total_loss / total_samples
         accuracy = total_correct / total_samples
     else:
         avg_loss, accuracy = 0.0, 0.0
 
-    logger.info(f"→ Training: loss={avg_loss:.4f}, acc={accuracy:.4f}")
+    logger.info(f"=> Training: loss={avg_loss:.4f}, acc={accuracy:.4f}")
     return avg_loss, accuracy
 
 
@@ -90,6 +90,6 @@ def validate_epoch(model, val_loader, criterion, device, logger, epoch, best_val
 
     val_loss /= val_total
     val_acc = val_correct / val_total
-    logger.info(f"→ Validation: loss={val_loss:.4f}, acc={val_acc:.4f} (best: {best_val_loss:.4f})")
+    logger.info(f"=> Validation: loss={val_loss:.4f}, acc={val_acc:.4f} (best: {best_val_loss:.4f})")
 
     return val_loss, val_acc

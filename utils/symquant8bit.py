@@ -31,7 +31,7 @@ class SymQuant8bit:
             scale = (127.0 * self.quantscale) / max_val
             q_x = (x * scale).round().clamp(-127, 127)
             if verbose:
-                self.logger.debug(f"[0D] scale={scale.item()}")
+                self.logger.debug(f"0D: scale={scale.item()}")
             return q_x, scale
 
         # Vector (1D)
@@ -40,7 +40,7 @@ class SymQuant8bit:
             scale = (127.0 * self.quantscale) / max_val
             q_x = (x * scale).round().clamp(-127, 127)
             if verbose:
-                self.logger.debug(f"[1D] scale={scale.item()}")
+                self.logger.debug(f"1D: scale={scale.item()}")
             return q_x, scale
 
         # Grouped (ND)
@@ -64,7 +64,7 @@ class SymQuant8bit:
         q_x = (x * scale).round().clamp(-127, 127)
 
         if verbose:
-            self.logger.debug(f"[ND] scale shape={scale.shape}, quantized min={q_x.min()}, max={q_x.max()}")
+            self.logger.debug(f"ND: scale shape={scale.shape}, quantized min={q_x.min()}, max={q_x.max()}")
 
         return q_x, scale
 

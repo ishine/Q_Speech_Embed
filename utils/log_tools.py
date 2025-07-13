@@ -4,10 +4,10 @@ import numpy as np
 import torch
 
 # Global toggle to enable/disable binary tensor logging
-LOG_TENSOR_ENABLED = False  # Set to True if binary logs are needed
+LOG_TENSOR_ENABLED = False  # Set to True if binary logs are needed.
 
 class LoggerUnit:
-    def __init__(self, name, level=logging.DEBUG):  # Set default level to DEBUG
+    def __init__(self, name, level=logging.DEBUG):  # Set default level.
         self.logger = logging.getLogger(name)
         self.level = level
         self.setup_logger()
@@ -17,10 +17,10 @@ class LoggerUnit:
 
         if not any(isinstance(handler, logging.StreamHandler) for handler in self.logger.handlers):
             console_handler = logging.StreamHandler()
-            console_handler.setLevel(self.level)  # Also set handler to DEBUG
+            console_handler.setLevel(self.level)  # Also set handler.
 
             formatter = logging.Formatter(
-                "%(asctime)s - %(name)s - %(levelname)s - %(message)s", datefmt="%Y-%m-%d %H:%M:%S"
+                "%(name)s - %(levelname)s - %(message)s"
             )
             console_handler.setFormatter(formatter)
 

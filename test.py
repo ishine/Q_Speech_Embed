@@ -8,15 +8,14 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.metrics import classification_report, confusion_matrix
 
-from utils.log_tools import LoggerUnit
-from dataset.SCDataset import SCDataset
-from model.BitGateNet import BitGateNet
-from Preprocess import preprocess_audio_batch
+from utils import LoggerUnit
+from dataset import SCDataset
+from model import BitGateNet
 
-# === Logger setup ===
+# Logger setup.
 logger = LoggerUnit("Tester").get_logger()
 
-# === Load config ===
+# Load config.
 config_path = "config.yaml"
 with open(config_path, "r") as f:
     config = yaml.safe_load(f)
@@ -24,29 +23,29 @@ with open(config_path, "r") as f:
 torch.manual_seed(config["seed"])
 device = config["device"]
 
-# === Load dataset ===
+# Load dataset.
 logger.info(f"Loading test set from {config['dataset']['test_path']}")
 test_dataset = SCDataset(config["dataset"]["test_path"], config["labels"])
 test_loader = torch.utils.data.DataLoader(
     test_dataset,
     batch_size=config["batch_size"],
     shuffle=False,
-    collate_fn=preprocess_audio_batch
+
 )
 
-# === Model ===
+# Model.
 model = BitGateNet(
     num_classes=len(config["labels"]),
     quantscale=config["quant_scale"],
-    test=config.get("test", 0)
+    q_en=config["q_en"]  # Keep this consistent with training.
 ).to(device)
 
-model_path = os.path.join(config["save_pth"], "best_model_0.8128.pth")
+model_path = os.path.join(config["save_pth"], "b_m_0.8298.pth")  # fixed name
 model.load_state_dict(torch.load(model_path, map_location=device))
 model.eval()
 logger.info(f"Loaded model from {model_path}")
 
-# === Evaluation ===
+# Evaluation.
 criterion = nn.CrossEntropyLoss()
 test_loss = 0.0
 correct = 0
@@ -85,11 +84,11 @@ accuracy = correct / total
 logger.info(f"Test complete: loss={test_loss:.4f}, acc={accuracy:.4f}")
 logger.info(f"Misclassified {len(misclassified_samples)} / {total}")
 
-# Print misclassifications
+# Print misclassifications.
 for item in misclassified_samples:
     print(f"[WRONG] {item['filename']} → pred: {item['pred']}, true: {item['true']}")
 
-# Save misclassified
+# Save misclassified.
 os.makedirs("logs_misclassified", exist_ok=True)
 with open("logs_misclassified/misclassified.json", "w") as f:
     json.dump(misclassified_samples, f, indent=2)
@@ -110,7 +109,7 @@ plt.tight_layout()
 plt.savefig("logs_misclassified/confusion_matrix.png")
 plt.show()
 
-# === Per-Class Accuracy ===
+# Per-Class Accuracy.
 all_preds = np.array(all_preds)
 all_targets = np.array(all_targets)
 print("\n=== Per-Class Accuracy ===")

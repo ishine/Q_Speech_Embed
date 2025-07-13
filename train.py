@@ -17,12 +17,12 @@ if __name__ == "__main__":
     with open("config.yaml", "r") as f:
         config = yaml.safe_load(f)
 
-    # Reproducibility + device setup
+    # Repro + device setup.
     torch.manual_seed(config["seed"])
     device = torch.device(config["device"])
     os.makedirs(config["save_pth"], exist_ok=True)
 
-    # Opt: Save config used for training
+    # Opt: Save config used for training.
     with open(os.path.join(config["save_pth"], "used_config.yaml"), "w") as f_out:
         yaml.safe_dump(config, f_out)
 
@@ -30,10 +30,10 @@ if __name__ == "__main__":
     train_dataset = SCDataset(config["dataset"]["train_path"], config["labels"])
     val_dataset = SCDataset(config["dataset"]["val_path"], config["labels"])
 
-    # Set worker count based on device
+    # Set worker count based on device.
     num_workers = 0 if config["device"] == "cpu" else 4
 
-    # Dynamically build loader kwargs
+    # Dynamically build loader kwargs.
     loader_kwargs = {
         "batch_size": config["batch_size"],
         "num_workers": num_workers,
@@ -42,7 +42,7 @@ if __name__ == "__main__":
         loader_kwargs["prefetch_factor"] = 2
         loader_kwargs["persistent_workers"] = True
 
-    # DataLoaders (with shuffle specified separately)
+    # DataLoaders (with shuffle specified separately).
     train_loader = torch.utils.data.DataLoader(
         train_dataset, shuffle=True, **loader_kwargs
     )
@@ -50,7 +50,7 @@ if __name__ == "__main__":
         val_dataset, shuffle=False, **loader_kwargs
     )
 
-    # Model
+    # Model.
     model = BitGateNet(
         num_classes=len(config["labels"]),
         quantscale=config["quant_scale"],
@@ -70,7 +70,7 @@ if __name__ == "__main__":
         weight_decay=config["weight_decay"]
     )
 
-    # Training loop with safety
+    # Train.
     best_val_loss = float("inf")
     pat = 0
     max_pat = config["patience"]
@@ -102,10 +102,10 @@ if __name__ == "__main__":
                     logger.warning("Early stopping.")
                     break
 
-            # Update last model path for final save
+            # Update last model path for final save.
             final_path = os.path.join(config["save_pth"], f"last_model_epoch{epoch+1}.pth")
 
     finally:
-        # Always save final model
+        # save final model.
         torch.save(model.state_dict(), final_path)
         logger.info(f"Final model saved: {final_path}")

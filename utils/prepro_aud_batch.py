@@ -13,7 +13,7 @@ def preprocess_audio_batch(batch):
     batch_mfccs = []
 
     for audio, sr in zip(audio_arrays, sampling_rates):
-        # Check if input is already MFCC
+        # Check if input is already MFCC.
         tensor = torch.tensor(audio, dtype=torch.float32)
         if tensor.dim() == 3 and tensor.shape[0] == 1 and tensor.shape[1] == 12:
             # Already MFCC → skip processing

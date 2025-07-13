@@ -28,7 +28,7 @@ class Conv2d_Q(nn.Conv2d):
         w_q, w_scale = self.quantizer.quantize(self.weight)
         w_fq = self.quantizer.apply_fake_quant(w_q, w_scale, self.weight)
 
-        # Bias handling.(if you want)
+        # Bias handling.?
         bias = self.bias if self.bias is not None else None
 
         return F.conv2d(x_fq, w_fq, bias=bias,
